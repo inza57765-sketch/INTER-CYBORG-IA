@@ -1,0 +1,9 @@
+# Secret
+.env
+
+# Env python
+.venv
+
+# Caches python
+__pycache__
+__pycache__/
