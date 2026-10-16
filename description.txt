@@ -1,0 +1,1 @@
+INTER-CYBORG.IA is a modular AI assistant framework built with Python, designed to orchestrate AI models, manage authentication, and handle conversational interactions through a flexible and extensible architecture.
