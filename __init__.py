@@ -1,2 +1,2 @@
-from .ai_cors import choice_models
-from choice_models import model_response
+from .auth import API_URL, token_verif
+from .core.core_module import choice_models

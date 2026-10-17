@@ -3,10 +3,8 @@ from auth import API_URL, token_verif, headers
 
 messages = []
 def choice_models(model, user_message):
-        
     if token_verif() is None:
-        print("Exit")
-        exit()
+        return "Token Introuvable."
 
 
     messages.append({
@@ -27,20 +25,16 @@ def choice_models(model, user_message):
         json    = data
     )
 
-    
+    api_response = response.json()
     if response.status_code == 200:
-        
-        api_response = response.json()
 
         model_response = api_response["choices"][0]["message"]["content"]
-
-        print(model_response)
-
         
         messages.append({
             "role":"assistant",
             "content":model_response
         })
+        return model_response
     
     else:
-        print(api_response)
+        return api_response

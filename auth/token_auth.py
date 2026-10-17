@@ -10,7 +10,3 @@ def token_verif():
         return GROK_API
     else:
         return None
-
-
-
-        
