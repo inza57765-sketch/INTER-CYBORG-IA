@@ -1,0 +1,158 @@
+ARCHITECTURE TECHNIQUE — INTER-CYBORG.IA
+
+1. OBJECTIF
+
+---
+
+Ce document décrit l'organisation actuelle du projet INTER-CYBORG.IA et les principes envisagés pour son évolution.
+
+Le projet est encore au stade de prototype. L'architecture doit rester simple, compréhensible et suffisamment flexible pour accueillir de nouvelles fonctionnalités.
+
+2. ARCHITECTURE ACTUELLE
+
+---
+
+auth/
+init.py
+headers_auth.py
+token_auth.py
+
+core/
+init.py
+core_module.py
+animations/
+
+tests/
+init.py
+test_choice_models.py
+test_token_verif_import.py
+test_token_verif_result.py
+
+3. RESPONSABILITÉS DES MODULES
+
+---
+
+3.1. Paquet auth/
+
+Le paquet auth regroupe les éléments nécessaires à l'authentification et à la préparation des requêtes destinées au service d'IA.
+
+auth/init.py expose notamment :
+
+- headers
+- API_URL
+- token_verif
+
+Les détails de la vérification du token et de la configuration HTTP sont répartis entre les modules spécialisés.
+
+3.2. Paquet core/
+
+Le paquet core contient actuellement le moteur principal du prototype.
+
+core/core_module.py :
+
+- importe les éléments nécessaires depuis auth ;
+- conserve temporairement l'historique conversationnel ;
+- ajoute les messages de l'utilisateur à cet historique ;
+- prépare les données envoyées à l'API ;
+- effectue la requête HTTP ;
+- récupère et retourne la réponse du modèle ;
+- ajoute la réponse de l'assistant à l'historique lorsque la requête réussit.
+
+La fonction principale actuelle est choice_models(model, user_message).
+
+core/init.py expose cette fonction afin de permettre l'import suivant :
+
+from core import choice_models
+
+3.3. Paquet tests/
+
+Le dossier tests contient les tests du projet.
+
+Le fichier test_choice_models.py fournit une interface interactive en terminal pour envoyer des messages au modèle et observer ses réponses.
+
+Les autres tests couvrent certains aspects de l'import et de la vérification de l'authentification.
+
+4. FLUX D'UNE REQUÊTE
+
+---
+
+Le fonctionnement actuel peut être résumé ainsi :
+
+1. Le programme reçoit un message de l'utilisateur.
+2. choice_models() vérifie la disponibilité du token.
+3. Le message est ajouté à l'historique.
+4. Le programme prépare les données de la requête.
+5. La requête est envoyée à l'API avec requests.
+6. Le programme récupère la réponse du serveur.
+7. En cas de succès, le message de l'assistant est ajouté à l'historique.
+8. La fonction retourne le contenu de la réponse.
+
+L'historique est transmis au modèle à chaque requête. Le modèle peut ainsi utiliser les échanges précédents pour répondre au message actuel.
+
+5. GESTION DE L'HISTORIQUE
+
+---
+
+L'historique est actuellement représenté par une liste Python déclarée au niveau du module :
+
+messages = []
+
+Cette liste est partagée par les appels à choice_models() au sein du même processus Python.
+
+Conséquences :
+
+- l'historique reste disponible pendant l'exécution du programme ;
+- l'historique est perdu lorsque le processus se termine ;
+- plusieurs conversations utilisant le même module peuvent partager les mêmes messages ;
+- aucune mémoire persistante n'est actuellement implémentée.
+
+6. LIMITES TECHNIQUES CONNUES
+
+---
+
+Les points suivants nécessitent une attention particulière :
+
+- gestion des erreurs de connexion et des délais d'attente ;
+- traitement des réponses HTTP non réussies ;
+- validation du format JSON reçu ;
+- vérification de la structure des réponses du modèle ;
+- séparation des historiques de conversations ;
+- contrôle de la croissance de l'historique ;
+- développement de tests automatisés complémentaires.
+
+7. ÉVOLUTION VERS LA PROGRAMMATION ORIENTÉE OBJET
+
+---
+
+Une évolution vers des classes est envisagée, mais n'est pas encore implémentée.
+
+Une possibilité future serait de créer une classe AIClient chargée de gérer la communication avec le service d'IA.
+
+Cette classe pourrait éventuellement contenir :
+
+- une configuration de modèle ;
+- un historique propre à chaque instance ;
+- une méthode d'envoi de message ;
+- une méthode de réinitialisation de l'historique.
+
+Exemple conceptuel non implémenté :
+
+class AIClient:
+    def __init__(self, model):
+        self.model = model
+        self.messages = []
+
+Cet exemple illustre une possibilité d'évolution. Il ne représente pas le code actuellement disponible dans le projet.
+
+8. PRINCIPES DE DÉVELOPPEMENT
+
+---
+
+Les évolutions doivent suivre les principes suivants :
+
+- conserver une séparation claire des responsabilités ;
+- éviter les modifications inutiles ;
+- tester chaque évolution avant de la valider ;
+- documenter les changements importants ;
+- maintenir la cohérence entre le code, les tests et la documentation ;
+- privilégier une progression graduelle plutôt qu'une refonte prématurée.

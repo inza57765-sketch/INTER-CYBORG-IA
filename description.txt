@@ -1,1 +1,7 @@
-INTER-CYBORG.IA est un framework modulaire d'assistant d'intelligence artificielle développé en Python. Il vise à coordonner différents modèles d'IA, à gérer l'authentification et à traiter les interactions conversationnelles grâce à une architecture flexible et évolutive.
+INTER-CYBORG.IA est un projet expérimental d'assistant d'intelligence artificielle développé en Python.
+
+Il vise à construire une architecture modulaire permettant de communiquer avec des modèles d'IA, de gérer l'authentification et de traiter les échanges conversationnels.
+
+Le prototype actuel dispose d'un moteur de communication avec une API et d'un historique conversationnel temporaire. Le projet évolue progressivement vers une architecture plus fiable, modulaire et extensible.
+
+La programmation orientée objet, la gestion de plusieurs conversations indépendantes et la mémoire persistante font partie des évolutions envisagées, mais ne sont pas encore implémentées.

@@ -1,13 +1,14 @@
-# Secret
+# Secrets et configuration locale
 .env
+*.env
+.venv/
+venv/
+auth/.env
 
-# Env python
-.venv
-
-# Caches python
-__pycache__
+# Caches et fichiers Python générés
 __pycache__/
+*.py[cod]
 
-# Notes
+# Notes personnelles
 Avenir.txt
-Archi.txt
+Notes.txt
